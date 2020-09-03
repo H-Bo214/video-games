@@ -1,5 +1,4 @@
 const express = require("express");
-const { request, response } = require("express");
 const app = express();
 app.use(express.json());
 
@@ -28,12 +27,14 @@ app.locals.games = [
       "https://media.rawg.io/media/games/929/9295e55ce69cf5337c567983cf8b4137.jpeg",
   },
 ];
-
 app.get('/', (request, response) => {
   response.send('Let the games begin!!!')
 });
 
-app.listen(app.get('port', () => {
+app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on http://localhost:${app.get('port')}.`)
   })
-)
+
+  app.get('/api/games', (request, response) => {
+    response.status(200).json(app.locals.games)
+  })
