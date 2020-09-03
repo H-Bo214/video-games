@@ -36,5 +36,22 @@ app.listen(app.get('port'), () => {
   })
 
   app.get('/api/games', (request, response) => {
+    if (!response) {
+      response.status(500).json({
+        errorMessage: 'Could not get game data.'
+      })
+    }
     response.status(200).json(app.locals.games)
+  })
+
+  app.get('/api/games/:id', (request, response) => {
+    const { id } = request.params
+    console.log('const id', typeof id)
+    const game = app.locals.games.find(game => game.id === id)
+    if (!game) {
+      response.status(400).json({
+        errorMessage: `Could not find a game with an id of ${id}.`
+      })
+    }
+    response.status(200).json(game)
   })
