@@ -1,4 +1,5 @@
 const express = require("express");
+const { request, response } = require("express");
 const app = express();
 app.use(express.json());
 
@@ -54,4 +55,17 @@ app.listen(app.get('port'), () => {
       })
     }
     response.status(200).json(game)
+  })
+
+  app.post('/api/games', (request, response) => {
+    const requiredProperties = ['name', 'released','background_image'];
+      for (let property of requiredProperties) {
+        if(!request.body[property]) {
+          return response.status(422).json({errorMessage: `Cannot POST: no property of ${property} in request.`})
+        }
+      }
+      const { name, released, background_image } = request.body
+      const id = Date.now().toString()
+      app.locals.games.push({ name, released, background_image, id })
+      response.status(201).json({ name, released, background_image })
   })
